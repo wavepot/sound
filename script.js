@@ -47,6 +47,13 @@ for (const [title, code] of Object.entries(examples)) {
 }
 exampleSelect.onchange = e => codeEditor.value = e.target.value
 
+codeEditor.oninput = () => {
+  localStorage.cacheEditor = codeEditor.value
+}
+if (localStorage.cacheEditor) {
+  codeEditor.value = localStorage.cacheEditor
+}
+
 const main = async () => {
   buttonBench.onclick = () => {
     const fn = compile(codeEditor.value)

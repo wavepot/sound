@@ -29,6 +29,13 @@ bpm(120)
 mod(1/4).saw(50).exp(10)
   .daverb(.27,1225)
   .out(.8)
-`
+`,
 
+  'delay': `\
+bpm(120)
+
+mod(1/4).saw(50).exp(10)
+  .delay()
+  .out(.8).plot()
+`,
 }
