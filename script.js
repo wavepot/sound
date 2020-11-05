@@ -37,10 +37,8 @@ self.worker = {
     let sample = Samples[remoteUrl]
 
     if (!sample) {
-      console.log('here')
       ;(async function () {
         await audioReady
-      console.log('hereee')
         const url = 'http://localhost:3000/fetch?url=' + encodeURIComponent(remoteUrl)
         const res = await fetch(url)
         const arrayBuffer = await res.arrayBuffer()
@@ -48,7 +46,6 @@ self.worker = {
         const floats = Array(audioBuffer.numberOfChannels).fill(0)
           .map((_, i) => audioBuffer.getChannelData(i))
         Samples[remoteUrl] = samples[remoteUrl] = floats
-        console.log('written', remoteUrl, floats)
       })()
     }
 
