@@ -6,7 +6,11 @@ let audio, bufferSourceNode
 
 let plot, ctx, pixelRatio = window.devicePixelRatio
 
+let resolveAudioReady
+let audioReady = new Promise(resolve => resolveAudioReady = resolve)
+
 // dependencies
+const Samples = []
 self.worker = {
   plot (buffer, size) {
     if (!ctx) {
@@ -23,16 +27,33 @@ self.worker = {
       plot.setBuffer(buffer)
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-      // ctx.scale(pixelRatio, pixelRatio)
-    // TODO: queue up
     plot.setBuffer(buffer)
     plot.setSize(size)
     plot.drawX()
     plot.drawY()
     plot.drawLine()
   },
-  fetchSample () {}
+  fetchSample (remoteUrl) {
+    let sample = Samples[remoteUrl]
+
+    if (!sample) {
+      console.log('here')
+      ;(async function () {
+        await audioReady
+      console.log('hereee')
+        const url = 'http://localhost:3000/fetch?url=' + encodeURIComponent(remoteUrl)
+        const res = await fetch(url)
+        const arrayBuffer = await res.arrayBuffer()
+        const audioBuffer = await audio.decodeAudioData(arrayBuffer)
+        const floats = Array(audioBuffer.numberOfChannels).fill(0)
+          .map((_, i) => audioBuffer.getChannelData(i))
+        Samples[remoteUrl] = samples[remoteUrl] = floats
+        console.log('written', remoteUrl, floats)
+      })()
+    }
+
+    return sample
+  }
 }
 
 const print = s => {
@@ -82,7 +103,10 @@ const main = async () => {
   }
 
   buttonPlay.onclick = () => {
-    audio = audio || new AudioContext({ latencyHint: 'playback' })
+    if (!audio) {
+      audio = new AudioContext({ latencyHint: 'playback' })
+      resolveAudioReady()
+    }
 
     const fn = compile(codeEditor.value)
 
@@ -99,17 +123,14 @@ const main = async () => {
 
     buffer.forEach((b, i) => source.getChannelData(i).set(b.subarray(0, bufferSize)))
 
-    if (!bufferSourceNode) {
-      bufferSourceNode = audio.createBufferSource()
-      bufferSourceNode.buffer = source
-      bufferSourceNode.connect(audio.destination)
-      bufferSourceNode.loop = true
-      bufferSourceNode.loopStart = 0.0
-      bufferSourceNode.loopEnd = duration
-      bufferSourceNode.start()
-    } else {
-      bufferSourceNode.loopEnd = duration
-    }
+    try { bufferSourceNode?.stop() } catch {}
+    bufferSourceNode = audio.createBufferSource()
+    bufferSourceNode.buffer = source
+    bufferSourceNode.connect(audio.destination)
+    bufferSourceNode.loop = true
+    bufferSourceNode.loopStart = 0.0
+    bufferSourceNode.loopEnd = duration
+    bufferSourceNode.start()
   }
 
   buttonStop.onclick = () => {

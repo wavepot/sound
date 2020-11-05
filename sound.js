@@ -111,12 +111,45 @@ class Sound {
       : this._ignoreNext
   }
 
-  // TODO: improve this
-  play (x,offset=0,speed=1,mod) {
-    let N = mod ?? x[0].length
-    let p = (( ( (this.p+offset)*speed) % N + N) % N)|0
-    this.Lx0 = (x[0][p] ?? 0) * .5
-    this.Rx0 = ((x[1] ?? x[0])[p] ?? 0) * .5
+  play (x,offset=0,speed=1) {
+    let p = (this.p+offset)*speed|0
+    this.Lx0 = (x[0][p] ?? 0)
+    this.Rx0 = ((x[1] ?? x[0])[p] ?? 0)
+    return this
+  }
+
+  biplay (x,offset=0,speed=1) {
+    let pm1 = (this.p+offset-1)*speed|0
+    let p0f = (this.p+offset  )*speed
+    let p1  = (this.p+offset+1)*speed|0
+    let p2  = (this.p+offset+2)*speed|0
+
+    let p0 = p0f|0
+    let fr = p0f-p0
+
+    let Lxm1 = (x[0][pm1] ?? 0)
+    let Lx0 = (x[0][p0] ?? 0)
+    let Lx1 = (x[0][p1] ?? 0)
+    let Lx2 = (x[0][p2] ?? 0)
+
+    let Rxm1 = ((x[1] ?? x[0])[pm1] ?? 0)
+    let Rx0 = ((x[1] ?? x[0])[p0] ?? 0)
+    let Rx1 = ((x[1] ?? x[0])[p1] ?? 0)
+    let Rx2 = ((x[1] ?? x[0])[p2] ?? 0)
+
+    let La = (3 * (Lx0-Lx1) - Lxm1 + Lx2) / 2
+    let Lb = 2*Lx1 + Lxm1 - (5*Lx0 + Lx2) / 2
+    let Lc = (Lx1 - Lxm1) / 2
+    let Ly = (((La * fr) + Lb) * fr + Lc) * fr + Lx0
+
+    let Ra = (3 * (Rx0-Rx1) - Rxm1 + Rx2) / 2
+    let Rb = 2*Rx1 + Rxm1 - (5*Rx0 + Rx2) / 2
+    let Rc = (Rx1 - Rxm1) / 2
+    let Ry = (((Ra * fr) + Rb) * fr + Rc) * fr + Rx0
+
+    this.Lx0 = Ly
+    this.Rx0 = Ry
+
     return this
   }
 
