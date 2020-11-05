@@ -1,11 +1,37 @@
 import './index.js'
 import examples from './examples.js'
+import Plot from './plot.js'
 
 let audio, bufferSourceNode
 
+let plot, ctx, pixelRatio = window.devicePixelRatio
+
 // dependencies
 self.worker = {
-  plot () {},
+  plot (buffer, size) {
+    if (!ctx) {
+      ctx = canvas.getContext('2d')
+      ctx.scale(pixelRatio, pixelRatio)
+      plot = Plot({
+        ctx,
+        width: canvas.width/2,
+        height: canvas.height/2,
+        pixelRatio
+      }, size)
+
+      plot.setSize(size)
+      plot.setBuffer(buffer)
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      // ctx.scale(pixelRatio, pixelRatio)
+    // TODO: queue up
+    plot.setBuffer(buffer)
+    plot.setSize(size)
+    plot.drawX()
+    plot.drawY()
+    plot.drawLine()
+  },
   fetchSample () {}
 }
 
