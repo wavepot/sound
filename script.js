@@ -1,4 +1,5 @@
 import './index.js'
+import examples from './examples.js'
 
 let audio, bufferSourceNode
 
@@ -11,6 +12,14 @@ self.worker = {
 const print = s => {
   right.insertBefore(document.createTextNode(s + '\n'), right.firstChild)
 }
+
+for (const [title, code] of Object.entries(examples)) {
+  const option = document.createElement('option')
+  option.value = code
+  option.textContent = title
+  exampleSelect.appendChild(option)
+}
+exampleSelect.onchange = e => codeEditor.value = e.target.value
 
 const main = async () => {
   buttonBench.onclick = () => {
@@ -36,6 +45,7 @@ const main = async () => {
     print('highest: ' + maxTime.toFixed(1) + ' ms')
     print((+samplesPerSecond.toFixed(1)).toLocaleString() + ' samples/sec')
     print(times + ' iterations')
+    print('------------------------------')
   }
 
   buttonPlay.onclick = () => {
