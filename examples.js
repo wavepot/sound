@@ -18,7 +18,6 @@ pulse(
   .vol('.1 .1 .5 1'.seq(1/16))
   .lp(700,1.2)
   .on(4,8).delay(1/(512+200*mod(1).sin(1)),.8)
-  .on(1,8,16).vol(0)
   .widen(.4)
   .out(.35)
 `,
@@ -37,5 +36,22 @@ bpm(120)
 mod(1/4).saw(50).exp(10)
   .delay()
   .out(.8).plot()
+`,
+
+  'techno': `\
+bpm(120)
+
+mod(1/4).sin(mod(1/4).val(42.881).exp(.057))
+  .exp(8.82).tanh(28.18)
+  .delay(1/16,.3)
+  .daverb(.2,1231)
+  .out(.6)
+
+mod(1/4).bplay('freesound:166384'.sample,90000,.54+.001*sin(sync(2))).lp()
+  .out(.23).plot()
+
+mod(1/16).play('freesound:165028'.sample,0,1)
+  .daverb(.5,1732)
+  .out(.3)
 `,
 }

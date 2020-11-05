@@ -39,7 +39,7 @@ self.worker = {
     if (!sample) {
       ;(async function () {
         await audioReady
-        const url = 'http://localhost:3000/fetch?url=' + encodeURIComponent(remoteUrl)
+        const url = '/samples/' + encodeURI(remoteUrl.replace(':', '-'))
         const res = await fetch(url)
         const arrayBuffer = await res.arrayBuffer()
         const audioBuffer = await audio.decodeAudioData(arrayBuffer)

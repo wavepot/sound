@@ -118,7 +118,52 @@ class Sound {
     return this
   }
 
-  biplay (x,offset=0,speed=1) {
+  splay (x,offset=0,speed=1) {
+    // https://www.musicdsp.org/en/latest/Other/60-5-point-spline-interpollation.html
+    let p0 = (this.p+offset-2)*speed|0
+    let p1 = (this.p+offset-1)*speed|0
+    let p2f= (this.p+offset  )*speed
+    let p3 = (this.p+offset+1)*speed|0
+    let p4 = (this.p+offset+2)*speed|0
+    let p5 = (this.p+offset+3)*speed|0
+
+    let p2 = p2f|0
+    let fr = p2f-p2
+
+    let Lx0 = (x[0][p0] ?? 0)
+    let Lx1 = (x[0][p1] ?? 0)
+    let Lx2 = (x[0][p2] ?? 0)
+    let Lx3 = (x[0][p3] ?? 0)
+    let Lx4 = (x[0][p4] ?? 0)
+    let Lx5 = (x[0][p5] ?? 0)
+
+    let Rx0 = ((x[1] ?? x[0])[p0] ?? 0)
+    let Rx1 = ((x[1] ?? x[0])[p1] ?? 0)
+    let Rx2 = ((x[1] ?? x[0])[p2] ?? 0)
+    let Rx3 = ((x[1] ?? x[0])[p3] ?? 0)
+    let Rx4 = ((x[1] ?? x[0])[p4] ?? 0)
+    let Rx5 = ((x[1] ?? x[0])[p5] ?? 0)
+
+    let Ly = Lx2 + 0.04166666666*fr*((Lx3-Lx1)*16.0+(Lx0-Lx4)*2.0
+    + fr *((Lx3+Lx1)*16.0-Lx0-Lx2*30.0- Lx4
+    + fr *(Lx3*66.0-Lx2*70.0-Lx4*33.0+Lx1*39.0+ Lx5*7.0- Lx0*9.0
+    + fr *(Lx2*126.0-Lx3*124.0+Lx4*61.0-Lx1*64.0- Lx5*12.0+Lx0*13.0
+    + fr *((Lx3-Lx2)*50.0+(Lx1-Lx4)*25.0+(Lx5-Lx0)*5.0)))));
+
+    let Ry = Rx2 + 0.04166666666*fr*((Rx3-Rx1)*16.0+(Rx0-Rx4)*2.0
+    + fr *((Rx3+Rx1)*16.0-Rx0-Rx2*30.0- Rx4
+    + fr *(Rx3*66.0-Rx2*70.0-Rx4*33.0+Rx1*39.0+ Rx5*7.0- Rx0*9.0
+    + fr *(Rx2*126.0-Rx3*124.0+Rx4*61.0-Rx1*64.0- Rx5*12.0+Rx0*13.0
+    + fr *((Rx3-Rx2)*50.0+(Rx1-Rx4)*25.0+(Rx5-Rx0)*5.0)))));
+
+    this.Lx0 = Ly
+    this.Rx0 = Ry
+
+    return this
+  }
+
+  bplay (x,offset=0,speed=1) {
+    // https://www.musicdsp.org/en/latest/Other/49-cubic-interpollation.html
     let pm1 = (this.p+offset-1)*speed|0
     let p0f = (this.p+offset  )*speed
     let p1  = (this.p+offset+1)*speed|0
