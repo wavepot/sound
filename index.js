@@ -83,6 +83,14 @@ self.api = {
       }
     }
     t = n / br
+
+    let _s = sounds[sounds_i++]
+
+    _s.t = t
+    _s.p = n
+    _s._wavetables_i = 0
+
+    return _s
   },
 
   loop (beat) {
