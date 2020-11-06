@@ -1,6 +1,6 @@
 export default {
   lp1 (x0,freq=1000,amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,
@@ -18,7 +18,7 @@ export default {
   },
 
   hp1 (x0,freq=1000,amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,
@@ -36,7 +36,7 @@ export default {
   },
 
   lp (x0, freq=1000, Q=1, amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,
@@ -58,7 +58,7 @@ export default {
   },
 
   hp (x0, freq=1000, Q=1, amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,
@@ -80,7 +80,7 @@ export default {
   },
 
   bp (x0, freq=1000, Q=1, amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,
@@ -102,7 +102,7 @@ export default {
   },
 
   bpp (x0, freq=1000, Q=1, amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,
@@ -124,7 +124,7 @@ export default {
   },
 
   not (x0, freq=1000, Q=1, amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,
@@ -146,7 +146,7 @@ export default {
   },
 
   ap (x0, freq=1000, Q=1, amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,
@@ -168,7 +168,7 @@ export default {
   },
 
   pk (x0, freq=1000, Q=1, gain=1, amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,
@@ -191,7 +191,7 @@ export default {
   },
 
   ls (x0, freq=1000, Q=1, gain=1, amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,
@@ -215,7 +215,7 @@ export default {
   },
 
   hs (x0, freq=1000, Q=1, gain=1, amt=1) {
-    var b = _biquads[_biquads_i++],
+    var b = _biquads[_filter_i++],
         {y1,y2,x1,x2} = b,
 
     w0 = pi2 * freq/sampleRate,

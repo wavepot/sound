@@ -42,23 +42,20 @@ self._fn_cache = {}
 self._fn_map = []
 self.parseFn = parseFn
 
-// blocks
-self._block_i = 0
+// _sounds
+self._sounds_i = 0
+self._sounds = Array.from(Array(100), () => (new Sound()))
 
-// sounds
-self.sounds_i = 0
-self.sounds = Array.from(Array(100), () => (new Sound()))
+// filter index
+self._filter_i = 0
 
 // biquads
-self._biquads_i = 0
 self._biquads = Array.from(Array(200),()=>({y1:0,y2:0,x1:0,x2:0}))
 
 // delays
-self._delays_i = 0
 self._delays = Array.from(Array(100),()=>(new Delay(44100)))
 
 // daverbs
-self._daverbs_i = 0
 self._daverbs = Array.from(Array(100),()=>(new Daverb(44100)))
 
 // samples
@@ -88,7 +85,7 @@ self.api = {
     }
     t = n / br
 
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -112,7 +109,7 @@ self.api = {
   // because it's optimized better at compile time
 
   grp () {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -122,7 +119,7 @@ self.api = {
   },
 
   end () {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -132,7 +129,7 @@ self.api = {
   },
 
   val (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -142,7 +139,7 @@ self.api = {
   },
 
   vol (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -152,7 +149,7 @@ self.api = {
   },
 
   mod (x,a0) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -162,7 +159,7 @@ self.api = {
   },
 
   exp (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -172,7 +169,7 @@ self.api = {
   },
 
   abs (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -182,7 +179,7 @@ self.api = {
   },
 
   tanh (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -192,7 +189,7 @@ self.api = {
   },
 
   atan (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -202,7 +199,7 @@ self.api = {
   },
 
   soft (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -212,7 +209,7 @@ self.api = {
   },
 
   on (x,a0,a1) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -222,7 +219,7 @@ self.api = {
   },
 
   play (x,a0,a1,a2) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -232,7 +229,7 @@ self.api = {
   },
 
   sin (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -242,7 +239,7 @@ self.api = {
   },
 
   cos (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -252,7 +249,7 @@ self.api = {
   },
 
   tri (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -262,7 +259,7 @@ self.api = {
   },
 
   saw (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -272,7 +269,7 @@ self.api = {
   },
 
   ramp (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -282,7 +279,7 @@ self.api = {
   },
 
   sqr (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -292,7 +289,7 @@ self.api = {
   },
 
   pulse (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -302,7 +299,7 @@ self.api = {
   },
 
   noise (x) {
-    let _s = sounds[sounds_i++]
+    let _s = _sounds[_sounds_i++]
 
     _s.t = t
     _s.p = n
@@ -318,7 +315,7 @@ self.api = {
 //   const { args, argNames } = parseFn(Sound.prototype[method])
 //   self.api[method] = new Function(...args,
 //     `
-//     let _s = sounds[sounds_i++]
+//     let _s = _sounds[_sounds_i++]
 
 //     _s.t = t
 //     _s.p = n
@@ -391,19 +388,15 @@ for (i = 0; i < bufferSize; i++) {
     fn()
 
     // space out effects so they don't interfere
-    // much when commenting out sounds
+    // much when commenting out _sounds
     // TODO: this is awful, use better heuristics
-    _biquads_i += 5
-    _daverbs_i += 5
-    _delays_i += 5
+    _filter_i += 5
   })
 
   buffer[0][i] = main.Lx0.toFinite()
   buffer[1][i] = main.Rx0.toFinite()
-  sounds_i =
-  _biquads_i =
-  _daverbs_i =
-  _delays_i =
+  _sounds_i =
+  _filter_i =
   main.Lx0 = main.Rx0 = 0
 }
 

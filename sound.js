@@ -208,8 +208,8 @@ class Sound {
   }
 
   delay (measure=1/16,feedback=.5,amt=.5) {
-    let Ld = _delays[_delays_i++]
-    let Rd = _delays[_delays_i++]
+    let Ld = _delays[_filter_i++]
+    let Rd = _delays[_filter_i++]
     let x = (bar*measure)|0
     this.Lx0 = Ld.delay(x).feedback(feedback).run(this.Lx0, amt)
     this.Rx0 = Rd.delay(x).feedback(feedback).run(this.Rx0, amt)
@@ -217,7 +217,7 @@ class Sound {
   }
 
   daverb (x=1,seed=-1) {
-    let d = _daverbs[_daverbs_i++]
+    let d = _daverbs[_filter_i++]
     d.seedParameters(seed).process(this, x)
     return this
   }
