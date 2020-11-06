@@ -38,6 +38,10 @@ self._loop = 0
 
 self.main = new Sound()
 
+self._fn_cache = {}
+self._fn_map = []
+self.parseFn = parseFn
+
 // blocks
 self._block_i = 0
 
@@ -325,12 +329,52 @@ self.api = {
 //   )
 // })
 
+function noop () {}
+
 self.compile = (code) => {
+  let fns = code.split('\n\n')
+
+  _fn_map = []
+
   let src = `
+
+${fns.map((s,i) => {
+  s = s.trim()
+  if (s in _fn_cache) {
+    _fn_map[i] = _fn_cache[s]
+  } else {
+    _fn_map[i] = noop
+    return `
+function _fn${i} () {
+${s}
+}
+_fn_cache[parseFn(_fn${i}).inner.trim()] = _fn${i}
+_fn_map[${i}] = _fn${i}
+`
+  }
+}).join('\n\n')}
+`
+
+  if (!src.trim().length) return self.mainFn
+
+  src = `
 function lfo (x=1,osc=sin) {
   return osc(sync(x))
 }
+` + src
 
+  console.log(src)
+
+  let func = new Function(
+    Object.keys(self.api),
+    src
+  ).bind(null, ...Object.values(self.api))
+  func()
+
+  return self.mainFn
+}
+
+self.mainFn = new Function(`
 console.log('n is:', n)
 for (i = 0; i < bufferSize; i++) {
   // make sure we have enough buffer to escape glitches
@@ -341,18 +385,18 @@ for (i = 0; i < bufferSize; i++) {
 
   n++
   real_n++
-  s = real_n / ${sampleRate}
+  s = real_n / sampleRate
 
-  ${code.split('\n\n').join(`
+  _fn_map.forEach(function (fn) {
+    fn()
 
-  // space out effects so they don't interfere
-  // much when commenting out sounds
-  // TODO: this is awful, use better heuristics
-  _biquads_i += 5
-  _daverbs_i += 5
-  _delays_i += 5
-
-  `)}
+    // space out effects so they don't interfere
+    // much when commenting out sounds
+    // TODO: this is awful, use better heuristics
+    _biquads_i += 5
+    _daverbs_i += 5
+    _delays_i += 5
+  })
 
   buffer[0][i] = main.Lx0.toFinite()
   buffer[1][i] = main.Rx0.toFinite()
@@ -364,12 +408,4 @@ for (i = 0; i < bufferSize; i++) {
 }
 
 return { bufferIndex: i, bpm: _bpm }
-  `
-
-  let func = new Function(
-    Object.keys(self.api),
-    src
-  ).bind(null, ...Object.values(self.api))
-
-  return func
-}
+`)
