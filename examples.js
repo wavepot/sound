@@ -47,11 +47,11 @@ mod(1/4).sin(mod(1/4).val(42.881).exp(.057))
   .daverb(.2,1231)
   .out(.6)
 
-mod(1/4).bplay('freesound:166384'.sample,90000,.54+.001*sin(sync(2))).lp()
-  .out(.23).plot()
+mod(1/4).bplay(166384,90000,.54+.001*lfo(2))
+  .out(.3).plot()
 
-mod(1/16).play('freesound:165028'.sample,0,1)
+mod(1/16).play(165028,0,1)
   .daverb(.5,1732)
-  .out(.3)
+  .out(.25)
 `,
 }
