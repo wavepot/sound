@@ -82,7 +82,7 @@ const main = async () => {
     print('------------------------------')
     for (let i = 0; i < times; i++) {
       const now = performance.now()
-      const { bufferIndex, bpm } = fn()
+      const { bufferIndex, bpm, shaderOps } = fn()
       const renderTime = performance.now() - now
       totalTime += renderTime
       maxTime = Math.max(renderTime, maxTime)
@@ -110,10 +110,9 @@ const main = async () => {
     const source = audio.createBuffer(numberOfChannels, bufferSize, sampleRate)
 
     const now = performance.now()
-    const { bufferIndex, bpm } = fn()
+    const { bufferIndex, bpm, shaderOps } = fn()
     const renderTime = performance.now() - now
     print('render time: ' + renderTime.toFixed(3) + 'ms')
-
     // in this context is barSize for readability
     const barSize = bufferIndex
     const duration = barSize / sampleRate

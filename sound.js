@@ -11,6 +11,20 @@ const getMethods = (obj) => {
     .filter(m => !PRIVATE_API.includes(m))
 }
 
+self.SHADER_API = [
+  'set', 'clear',
+  'vert', 'frag',
+  'youtube', 'video',
+  'model', 'quad', 'tri',
+  'random', 'points', 'lathe',
+  'thru', 'color', 'light',
+  'rotate', 'aspect', 'perspect',
+  'zoom', 'move', 'glitch',
+  'tex', 'texrgba',
+  'blend', 'read', 'write',
+  'draw', 'blit',
+]
+
 class Sound {
   constructor () {
     this.Lx0 = 0
@@ -261,6 +275,13 @@ class Sound {
     return this.Lx0
   }
 }
+
+SHADER_API.forEach(m => {
+  Sound.prototype[m] = new Function('a0','a1','a2', `
+    if (_isDrawFrame) _shaderFrame.push(['${m}',a0?.valueOf(),a1?.valueOf(),a2?.valueOf()])
+    return this
+  `)
+})
 
 // aliases
 Sound.prototype.mul = Sound.prototype.vol

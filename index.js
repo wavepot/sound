@@ -24,6 +24,12 @@ self.sampleRate = 44100
 self.buffer = [1,2].map(() => new Float32Array(self.bufferSize))
 self.numberOfChannels = 2
 
+// shader specific
+self.samplesPerDrawFrame = 44100 / 60
+self._isDrawFrame = true
+self._shaderFrame = []
+self._shaderOps = []
+
 // clock
 self.real_n = 0 // this doesn't adjust by bpm
 self.n = 0 // this adjusts by bpm
@@ -308,6 +314,21 @@ self.api = {
     return _s.noise(x)
   },
 }
+
+SHADER_API.forEach(m => {
+  self.api[m] = new Function('a0','a1','a2', `
+    if (_isDrawFrame) _shaderFrame.push(['${m}',a0?.valueOf(),a1?.valueOf(),a2?.valueOf()])
+
+    let _s = _sounds[_sounds_i++]
+
+    _s.t = t
+    _s.p = n
+    _s._wavetables_i = 0
+
+    return _s
+  `)
+})
+
 // const METHODS = ['mod','val','on','grp','play',
 //   'sin','cos','tri','saw','ramp','sqr','pulse','noise']
 
@@ -326,7 +347,7 @@ self.api = {
 //   )
 // })
 
-function noop () {}
+self.noop = function noop () {}
 
 self.compile = (code) => {
   let fns = code.split('\n\n')
@@ -373,6 +394,8 @@ function lfo (x=1,osc=sin) {
 
 self.mainFn = new Function(`
 console.log('render n:', n)
+_shaderFrame = []
+_shaderOps = []
 for (i = 0; i < bufferSize; i++) {
   // make sure we have enough buffer to escape glitches
   // and that it divides to bars so it's rhythmic if it does
@@ -383,6 +406,7 @@ for (i = 0; i < bufferSize; i++) {
   n++
   real_n++
   s = real_n / sampleRate
+  _isDrawFrame = real_n % samplesPerDrawFrame === 0
 
   _fn_map.forEach(function (fn) {
     fn()
@@ -395,9 +419,15 @@ for (i = 0; i < bufferSize; i++) {
 
   buffer[0][i] = main.Lx0.toFinite()
   buffer[1][i] = main.Rx0.toFinite()
+
   _sounds_i =
   _filter_i =
   main.Lx0 = main.Rx0 = 0.0
+
+  if (_isDrawFrame) {
+    _shaderOps.push(_shaderFrame)
+    _shaderFrame = []
+  }
 }
-return { bufferIndex: i, bpm: _bpm }
+return { bufferIndex: i, bpm: _bpm, shaderOps: _shaderOps }
 `)
