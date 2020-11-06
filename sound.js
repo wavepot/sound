@@ -112,6 +112,7 @@ class Sound {
   }
 
   play (x,offset=0,speed=1) {
+    x = x.sample ?? x
     let p = (this.p+offset)*speed|0
     this.Lx0 = (x[0][p] ?? 0)
     this.Rx0 = ((x[1] ?? x[0])[p] ?? 0)
@@ -120,6 +121,7 @@ class Sound {
 
   splay (x,offset=0,speed=1) {
     // https://www.musicdsp.org/en/latest/Other/60-5-point-spline-interpollation.html
+    x = x.sample ?? x
     let p0 = (this.p+offset-2)*speed|0
     let p1 = (this.p+offset-1)*speed|0
     let p2f= (this.p+offset  )*speed
@@ -164,6 +166,7 @@ class Sound {
 
   bplay (x,offset=0,speed=1) {
     // https://www.musicdsp.org/en/latest/Other/49-cubic-interpollation.html
+    x = x.sample ?? x
     let pm1 = (this.p+offset-1)*speed|0
     let p0f = (this.p+offset  )*speed
     let p1  = (this.p+offset+1)*speed|0
@@ -298,6 +301,13 @@ const N = Number.prototype
 Object.defineProperty(N, 'note', {
   get () {
     return Math.pow(2, (this - 57)/12) * 440
+  },
+  set () {},
+})
+
+Object.defineProperty(N, 'sample', {
+  get () {
+    return ('freesound:' + this).sample
   },
   set () {},
 })
