@@ -84,12 +84,14 @@ self.api = {
     }
     t = n / br
   },
+
   loop (beat) {
     if (i === 0) {
       n = (beat + 1) * br
       t = n / br
     }
   },
+
   sync (x=1) {
     return (1/x) * _sync
   },
@@ -317,6 +319,10 @@ self.api = {
 
 self.compile = (code) => {
   let src = `
+function lfo (x=1,osc=sin) {
+  return osc(sync(x))
+}
+
 console.log('n is:', n)
 for (i = 0; i < bufferSize; i++) {
   // make sure we have enough buffer to escape glitches
