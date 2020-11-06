@@ -236,9 +236,9 @@ class Sound {
     return this
   }
 
-  out (x=1) {
-    main.Lx0 += this.Lx0 * x //* x * (2-(1 + 1*LR))
-    main.Rx0 += this.Rx0 * x //* x *    (1 + 1*LR)
+  out (x=1,target=main) {
+    target.Lx0 += this.Lx0 * x //* x * (2-(1 + 1*LR))
+    target.Rx0 += this.Rx0 * x //* x *    (1 + 1*LR)
     return this
   }
 
