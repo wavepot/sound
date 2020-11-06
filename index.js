@@ -372,7 +372,7 @@ function lfo (x=1,osc=sin) {
 }
 
 self.mainFn = new Function(`
-console.log('n is:', n)
+console.log('render n:', n)
 for (i = 0; i < bufferSize; i++) {
   // make sure we have enough buffer to escape glitches
   // and that it divides to bars so it's rhythmic if it does
@@ -397,8 +397,7 @@ for (i = 0; i < bufferSize; i++) {
   buffer[1][i] = main.Rx0.toFinite()
   _sounds_i =
   _filter_i =
-  main.Lx0 = main.Rx0 = 0
+  main.Lx0 = main.Rx0 = 0.0
 }
-
 return { bufferIndex: i, bpm: _bpm }
 `)

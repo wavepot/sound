@@ -122,29 +122,33 @@ class Sound {
   splay (x,offset=0,speed=1) {
     // https://www.musicdsp.org/en/latest/Other/60-5-point-spline-interpollation.html
     x = x.sample ?? x
-    let p0 = (this.p+offset-2)*speed|0
-    let p1 = (this.p+offset-1)*speed|0
-    let p2f= (this.p+offset  )*speed
-    let p3 = (this.p+offset+1)*speed|0
-    let p4 = (this.p+offset+2)*speed|0
-    let p5 = (this.p+offset+3)*speed|0
+    let L = x[0]
+    let R = x[1] ?? x[0]
+
+    let p = this.p+offset
+    let p0 = (p-2)*speed|0
+    let p1 = (p-1)*speed|0
+    let p2f= (p  )*speed
+    let p3 = (p+1)*speed|0
+    let p4 = (p+2)*speed|0
+    let p5 = (p+3)*speed|0
 
     let p2 = p2f|0
     let fr = p2f-p2
 
-    let Lx0 = (x[0][p0] ?? 0)
-    let Lx1 = (x[0][p1] ?? 0)
-    let Lx2 = (x[0][p2] ?? 0)
-    let Lx3 = (x[0][p3] ?? 0)
-    let Lx4 = (x[0][p4] ?? 0)
-    let Lx5 = (x[0][p5] ?? 0)
+    let Lx0 = L[p0] ?? 0
+    let Lx1 = L[p1] ?? 0
+    let Lx2 = L[p2] ?? 0
+    let Lx3 = L[p3] ?? 0
+    let Lx4 = L[p4] ?? 0
+    let Lx5 = L[p5] ?? 0
 
-    let Rx0 = ((x[1] ?? x[0])[p0] ?? 0)
-    let Rx1 = ((x[1] ?? x[0])[p1] ?? 0)
-    let Rx2 = ((x[1] ?? x[0])[p2] ?? 0)
-    let Rx3 = ((x[1] ?? x[0])[p3] ?? 0)
-    let Rx4 = ((x[1] ?? x[0])[p4] ?? 0)
-    let Rx5 = ((x[1] ?? x[0])[p5] ?? 0)
+    let Rx0 = R[p0] ?? 0
+    let Rx1 = R[p1] ?? 0
+    let Rx2 = R[p2] ?? 0
+    let Rx3 = R[p3] ?? 0
+    let Rx4 = R[p4] ?? 0
+    let Rx5 = R[p5] ?? 0
 
     let Ly = Lx2 + 0.04166666666*fr*((Lx3-Lx1)*16.0+(Lx0-Lx4)*2.0
     + fr *((Lx3+Lx1)*16.0-Lx0-Lx2*30.0- Lx4
@@ -167,23 +171,27 @@ class Sound {
   bplay (x,offset=0,speed=1) {
     // https://www.musicdsp.org/en/latest/Other/49-cubic-interpollation.html
     x = x.sample ?? x
-    let pm1 = (this.p+offset-1)*speed|0
-    let p0f = (this.p+offset  )*speed
-    let p1  = (this.p+offset+1)*speed|0
-    let p2  = (this.p+offset+2)*speed|0
+    let L = x[0]
+    let R = x[1] ?? x[0]
+
+    let p = this.p+offset
+    let pm1 = (p-1)*speed|0
+    let p0f = (p  )*speed
+    let p1  = (p+1)*speed|0
+    let p2  = (p+2)*speed|0
 
     let p0 = p0f|0
     let fr = p0f-p0
 
-    let Lxm1 = (x[0][pm1] ?? 0)
-    let Lx0 = (x[0][p0] ?? 0)
-    let Lx1 = (x[0][p1] ?? 0)
-    let Lx2 = (x[0][p2] ?? 0)
+    let Lxm1=L[pm1] ?? 0
+    let Lx0 = L[p0] ?? 0
+    let Lx1 = L[p1] ?? 0
+    let Lx2 = L[p2] ?? 0
 
-    let Rxm1 = ((x[1] ?? x[0])[pm1] ?? 0)
-    let Rx0 = ((x[1] ?? x[0])[p0] ?? 0)
-    let Rx1 = ((x[1] ?? x[0])[p1] ?? 0)
-    let Rx2 = ((x[1] ?? x[0])[p2] ?? 0)
+    let Rxm1=R[pm1] ?? 0
+    let Rx0 = R[p0] ?? 0
+    let Rx1 = R[p1] ?? 0
+    let Rx2 = R[p2] ?? 0
 
     let La = (3 * (Lx0-Lx1) - Lxm1 + Lx2) / 2
     let Lb = 2*Lx1 + Lxm1 - (5*Lx0 + Lx2) / 2
