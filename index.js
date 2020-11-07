@@ -425,7 +425,7 @@ for (i = 0; i < bufferSize; i++) {
   main.Lx0 = main.Rx0 = 0.0
 
   if (_isDrawFrame) {
-    _shaderOps.push(_shaderFrame)
+    _shaderOps.push([t,_shaderFrame])
     _shaderFrame = []
   }
 }
